@@ -6,4 +6,4 @@ from Weekend.models import UserFile
 class UserFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFile
-        fields = ['title', 'code', 'html_file']
+        fields = ['title', 'html_file']
