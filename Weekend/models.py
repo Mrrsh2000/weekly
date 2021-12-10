@@ -8,4 +8,6 @@ class UserFile(models.Model):
 
     html_file = models.FileField(upload_to='media/', verbose_name="فایل html")
     title = models.CharField(max_length=50, verbose_name="نام کاربر")
+    code = models.IntegerField(verbose_name="کد ارسالی کاربر")
+    data = models.TextField(default=False,verbose_name="دیتای ارسالی کاربر")
     created_at = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="تاریخ ایجاد")
