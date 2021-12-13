@@ -16,8 +16,25 @@ class UserViewSet(viewsets.ViewSet):
         return SuccessResponse(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        serializer = UserFileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return SuccessResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return SuccessNotResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        queryset = UserFile.objects.filter(code=request.data['code'])
+        if queryset.count() == 0:
+            serializer = UserFileSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return SuccessResponse(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return SuccessNotResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer = UserFileSerializer(data=request.data)
+            if serializer.is_valid():
+                first = queryset.first()
+                first.data = request.data['data']
+                first.title = request.data['title']
+                first.html_file = request.data['html_file']
+                first.save()
+                return SuccessResponse({
+                    "code": first.code,
+                    "data": first.data,
+                    "title": first.title,
+                    "html_file": first.html_file.url,
+                }, status=status.HTTP_200_OK)
